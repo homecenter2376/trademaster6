@@ -86,8 +86,32 @@ export function PluginPage() {
   }, 100).bind(null, editingPlugin);
 
   const [loadUrl, setLoadUrl] = useState<string>("");
-  const loadFromUrl = (loadUrl: string) =>
-    fetch(loadUrl)
+  const loadFromUrl = (loadUrl: string) => {
+    const url = new URL(loadUrl);
+    if (url.hostname === 'raw.githubusercontent.com') {
+      return fetch(`/api/proxy/github${url.pathname}${url.search}`)
+        .then((res) => res.text())
+        .then((content) => {
+          try {
+            return JSON.stringify(JSON.parse(content), null, "  ");
+          } catch (e) {
+            return content;
+          }
+        })
+        .then((content) => {
+          pluginStore.updatePlugin(editingPlugin.id, (plugin) => {
+            plugin.content = content;
+            const tool = FunctionToolService.add(plugin, true);
+            plugin.title = tool.api.definition.info.title;
+            plugin.version = tool.api.definition.info.version;
+          });
+        })
+        .catch((e) => {
+          showToast(Locale.Plugin.EditModal.Error);
+        });
+    }
+    
+    return fetch(loadUrl)
       .catch((e) => {
         const p = new URL(loadUrl);
         return fetch(`/api/proxy/${p.pathname}?${p.search}`, {
@@ -115,6 +139,7 @@ export function PluginPage() {
       .catch((e) => {
         showToast(Locale.Plugin.EditModal.Error);
       });
+  };
 
   return (
     <ErrorBoundary>

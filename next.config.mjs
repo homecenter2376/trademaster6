@@ -22,6 +22,8 @@ const nextConfig = {
 
     config.resolve.fallback = {
       child_process: false,
+      bufferutil: false,
+      "utf-8-validate": false,
     };
 
     return config;
@@ -59,6 +61,15 @@ if (mode !== "export") {
         source: "/api/:path*",
         headers: CorsHeaders,
       },
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, must-revalidate",
+          }
+        ],
+      }
     ];
   };
 
@@ -99,6 +110,10 @@ if (mode !== "export") {
       {
         source: "/api/proxy/alibaba/:path*",
         destination: "https://dashscope.aliyuncs.com/api/:path*",
+      },
+      {
+        source: "/api/proxy/github/:path*",
+        destination: "https://raw.githubusercontent.com/:path*",
       },
     ];
 
