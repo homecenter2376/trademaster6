@@ -1,109 +1,42 @@
 [
-  {
-    "title": "Swing Trade Setup Generator",
-    "description": "Get optimal swing trade setups based on technical indicators.",
-    "category": "Trading",
-    "prompt": "Generate swing trade setups using the following stock symbol: {{stock_symbol}}. Consider the preferred timeframe of {{timeframe}}, and apply these indicators: {{indicators}}. Suggest entry price, stop-loss, and target zones.",
-    "inputs": [
-      { "name": "stock_symbol", "type": "input", "description": "Enter stock symbol (e.g., AAPL)" },
-      { "name": "timeframe", "type": "input", "description": "Preferred timeframe (e.g., 4H, Daily)" },
-      { "name": "indicators", "type": "textarea", "description": "Technical indicators to use" }
-    ]
-  },
-  {
-    "title": "Breakout Scanner Prompt",
-    "description": "Identify potential breakout trades based on volume & price action.",
-    "category": "Trading",
-    "prompt": "Scan for breakout opportunities on timeframe {{timeframe}} using price action rules and volume spikes. Focus on sector: {{sector}} and signal: {{signal_type}}.",
-    "inputs": [
-      { "name": "timeframe", "type": "input", "description": "Chart timeframe to analyze" },
-      { "name": "sector", "type": "input", "description": "Sector to focus on (e.g., Tech, Energy)" },
-      { "name": "signal_type", "type": "input", "description": "Type of breakout signal (e.g., flag, wedge)" }
-    ]
-  },
-  {
-    "title": "Backtest Trading Strategy",
-    "description": "Backtest your trading strategy using past data.",
-    "category": "Trading",
-    "prompt": "Backtest this trading strategy: {{strategy_description}} on {{stock_symbol}} over the last {{duration}} using {{timeframe}} data. Show win/loss ratio, drawdown, and equity curve summary.",
-    "inputs": [
-      { "name": "strategy_description", "type": "textarea", "description": "Describe your trading strategy" },
-      { "name": "stock_symbol", "type": "input", "description": "Enter a stock symbol" },
-      { "name": "duration", "type": "input", "description": "Duration to test (e.g., 6 months)" },
-      { "name": "timeframe", "type": "input", "description": "Timeframe to use" }
-    ]
-  },
-  {
-    "title": "Price Action Trade Ideas",
-    "description": "Generate trade ideas using pure price action techniques.",
-    "category": "Trading",
-    "prompt": "Using pure price action, generate 3 trade ideas for {{stock_symbol}} on the {{timeframe}} timeframe. Use recent swing highs/lows and candle patterns like {{patterns}}.",
-    "inputs": [
-      { "name": "stock_symbol", "type": "input", "description": "Stock or asset symbol" },
-      { "name": "timeframe", "type": "input", "description": "Chart timeframe (e.g., Daily)" },
-      { "name": "patterns", "type": "textarea", "description": "Price action patterns to focus on" }
-    ]
-  },
-  {
-    "title": "Trading Journal Analyzer",
-    "description": "Analyze your trading journal to find strengths and weaknesses.",
-    "category": "Trading",
-    "prompt": "Analyze the following trading journal: {{trading_journal}}. Summarize top mistakes, profitable setups, win rate, and emotional patterns. Suggest improvements.",
-    "inputs": [
-      { "name": "trading_journal", "type": "textarea", "description": "Paste your trading journal notes or summary" }
-    ]
-  },
-  {
-    "title": "Intraday Trading Signal Generator",
-    "description": "Get intraday trading signals based on scalping techniques.",
-    "category": "Trading",
-    "prompt": "Based on {{stock_symbol}}, generate intraday trading signals for the {{timeframe}} timeframe. Use scalping techniques with {{indicators}} and give clear entry, exit, and stop-loss levels.",
-    "inputs": [
-      { "name": "stock_symbol", "type": "input", "description": "Asset or stock symbol" },
-      { "name": "timeframe", "type": "input", "description": "Timeframe (e.g., 5min, 15min)" },
-      { "name": "indicators", "type": "textarea", "description": "List of scalping indicators" }
-    ]
-  },
-  {
-    "title": "Multi-Timeframe Trade Validator",
-    "description": "Check trade idea validity across multiple timeframes.",
-    "category": "Trading",
-    "prompt": "Validate the trade idea: {{trade_idea}} using the following timeframes: {{timeframes}}. Focus on trend alignment, confluence, and risk zones.",
-    "inputs": [
-      { "name": "trade_idea", "type": "textarea", "description": "Describe your trade idea" },
-      { "name": "timeframes", "type": "input", "description": "List of timeframes (e.g., 1H, 4H, Daily)" }
-    ]
-  },
-  {
-    "title": "Trade Risk Calculator",
-    "description": "Calculate position size, risk-reward ratio, and stop loss.",
-    "category": "Trading",
-    "prompt": "For a trading account of size ${{account_size}}, calculate the ideal position size, entry price, stop loss, and take profit based on risk percentage {{risk_percent}} and entry at {{entry_price}} with stop at {{stop_price}}.",
-    "inputs": [
-      { "name": "account_size", "type": "input", "description": "Account size in USD" },
-      { "name": "risk_percent", "type": "input", "description": "Risk per trade (%)" },
-      { "name": "entry_price", "type": "input", "description": "Planned entry price" },
-      { "name": "stop_price", "type": "input", "description": "Planned stop-loss price" }
-    ]
-  },
-  {
-    "title": "Sector Rotation Analyzer",
-    "description": "Find which sectors are gaining or losing strength.",
-    "category": "Trading",
-    "prompt": "Analyze sector rotation trends over the last {{duration}}. Identify strong vs weak sectors and suggest long/short trade ideas using ETFs or top sector stocks.",
-    "inputs": [
-      { "name": "duration", "type": "input", "description": "Timeframe to analyze (e.g., 1 month, 3 months)" }
-    ]
-  },
-  {
-    "title": "Macroeconomic Event Trade Plan",
-    "description": "Create a trade plan around an upcoming macroeconomic event.",
-    "category": "Trading",
-    "prompt": "Build a trade plan for the event: {{event_name}} scheduled on {{event_date}}. Include potential market reaction, asset impact (like {{assets}}), and pre-event vs post-event trading strategies.",
-    "inputs": [
-      { "name": "event_name", "type": "input", "description": "Name of the event (e.g., FOMC, CPI)" },
-      { "name": "event_date", "type": "input", "description": "Scheduled date" },
-      { "name": "assets", "type": "textarea", "description": "Assets or sectors affected" }
-    ]
-  }
+  [
+    "Swing Trade Setup Generator",
+    "Generate swing trade setups using the following stock symbol: {{stock_symbol}}. Consider the preferred timeframe of {{timeframe}}, and apply these indicators: {{indicators}}. Suggest entry price, stop-loss, and target zones."
+  ],
+  [
+    "Breakout Scanner Prompt",
+    "Scan for breakout opportunities on timeframe {{timeframe}} using price action rules and volume spikes. Focus on sector: {{sector}} and signal: {{signal_type}}."
+  ],
+  [
+    "Backtest Trading Strategy",
+    "Backtest this trading strategy: {{strategy_description}} on {{stock_symbol}} over the last {{duration}} using {{timeframe}} data. Show win/loss ratio, drawdown, and equity curve summary."
+  ],
+  [
+    "Price Action Trade Ideas",
+    "Using pure price action, generate 3 trade ideas for {{stock_symbol}} on the {{timeframe}} timeframe. Use recent swing highs/lows and candle patterns like {{patterns}}."
+  ],
+  [
+    "Trading Journal Analyzer",
+    "Analyze the following trading journal: {{trading_journal}}. Summarize top mistakes, profitable setups, win rate, and emotional patterns. Suggest improvements."
+  ],
+  [
+    "Intraday Trading Signal Generator",
+    "Based on {{stock_symbol}}, generate intraday trading signals for the {{timeframe}} timeframe. Use scalping techniques with {{indicators}} and give clear entry, exit, and stop-loss levels."
+  ],
+  [
+    "Multi-Timeframe Trade Validator",
+    "Validate the trade idea: {{trade_idea}} using the following timeframes: {{timeframes}}. Focus on trend alignment, confluence, and risk zones."
+  ],
+  [
+    "Trade Risk Calculator",
+    "For a trading account of size ${{account_size}}, calculate the ideal position size, entry price, stop loss, and take profit based on risk percentage {{risk_percent}} and entry at {{entry_price}} with stop at {{stop_price}}."
+  ],
+  [
+    "Sector Rotation Analyzer",
+    "Analyze sector rotation trends over the last {{duration}}. Identify strong vs weak sectors and suggest long/short trade ideas using ETFs or top sector stocks."
+  ],
+  [
+    "Macroeconomic Event Trade Plan",
+    "Build a trade plan for the event: {{event_name}} scheduled on {{event_date}}. Include potential market reaction, asset impact (like {{assets}}), and pre-event vs post-event trading strategies."
+  ]
 ]
