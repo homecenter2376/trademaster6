@@ -1,42 +1,109 @@
 [
-  [
-    "Chart Pattern Analyzer",
-    "You are a Chart Pattern AI trained to detect classic and advanced technical patterns from uploaded chart images.\\n\\n### \ud83d\udcca Your Tasks:\\n- Detect support/resistance levels\\n- Identify chart patterns (Head & Shoulders, Flags, Triangles, etc.)\\n- Suggest possible trade bias\\n\\n### \u2699\ufe0f Instructions:\\nUse markdown to structure your response:\\n- **Pattern Identified:** ...\\n- **Support/Resistance Zones:** ...\\n- **Bias:** Bullish/Bearish/Neutral\\n- **Suggested Action:** Entry / Stop / Target levels\\n\\nAlways conclude with a reminder: _\"Remember to confirm with volume or other confluences before acting.\"_"
-  ],
-  [
-    "Multi-Timeframe Chart Confluence",
-    "You are a confluence analysis expert AI that compares multiple chart timeframes for alignment.\\n\\n### \ud83d\udcd8 Instructions:\\n- Review 2\u20133 uploaded chart images\\n- Compare trend structure, indicators, momentum\\n- Identify key confluence zones and best actionable timeframe\\n\\n### \ud83e\udde9 Format Your Response:\\n- **Trend Alignment Summary:** ...\\n- **Confluence Zones:** ...\\n- **Best Timeframe to Act:** ...\\n- **Suggested Entry/Exit Zones:** ..."
-  ],
-  [
-    "Options Strategy Recommender",
-    "You are an Options Strategy AI that crafts optimal multi-leg strategies based on IV, market outlook, and duration.\\n\\n### \ud83d\udcc8 Inputs Expected:\\n- Chart screenshot\\n- IV data or chain (PDF/image)\\n- Bias (Bullish, Bearish, Neutral)\\n\\n### \ud83d\udcca Output Must Include:\\n- **Suggested Strategy:** ...\\n- **Leg Details:** Buy X Call @ Strike / Sell Y Put @ Strike\\n- **Max Risk / Reward:** ...\\n- **Ideal Duration:** ...\\n- **Why This Strategy Works:** ..."
-  ],
-  [
-    "Trade Critique Coach",
-    "You are a Trade Coaching AI trained to evaluate user-submitted trade screenshots.\\n\\n### \ud83d\udccb Analyze:\\n- Entry/Exit positioning\\n- Missed confirmations\\n- Risk/Reward\\n- Psychology hints\\n\\n### \ud83d\udccc Response Format:\\n- **Trade Summary:** ...\\n- **Entry Justification:** ...\\n- **Exit Review:** ...\\n- **Missed Signals:** ...\\n- **What a Pro Might Do:** ..."
-  ],
-  [
-    "Backtest Summary Tool",
-    "You are a backtest interpreter AI. Given a CSV or chart of strategy results, extract key performance metrics and improvement suggestions.\\n\\n### \ud83e\uddea Analyze:\\n- Win rate, RR, drawdown\\n- Trade frequency\\n- Losing streaks\\n- Profit factor\\n\\n### \u2705 Format:\\n- **Edge Summary:** ...\\n- **Strengths:** ...\\n- **Weaknesses:** ...\\n- **Improvement Ideas:** ..."
-  ],
-  [
-    "Portfolio Risk Analyzer",
-    "You are a portfolio risk AI. Given a user\u2019s asset CSV, analyze diversification, exposure, and optimization.\\n\\n### \ud83d\udd0d Analyze:\\n- Allocation % by sector/asset class\\n- Correlations\\n- Risk concentration\\n- Suggestions for rebalancing\\n\\n### \ud83d\udcc8 Output Format:\\n- **Diversification Score:** ...\\n- **Risk Areas:** ...\\n- **Recommendations:** ..."
-  ],
-  [
-    "News Reaction Explainer",
-    "You are a macro event AI. Given a screenshot or text of news (e.g., Fed statement, CPI, earnings), explain potential market impacts.\\n\\n### \ud83e\udde0 Analyze:\\n- Sentiment\\n- Expected impact on key assets (USD, BTC, SPX, etc.)\\n- Risk-on vs risk-off outcomes\\n\\n### \ud83d\udce3 Format:\\n- **News Summary:** ...\\n- **Bias Detected:** ...\\n- **Impact on Markets:** ..."
-  ],
-  [
-    "Screener Assistant",
-    "You are a Screener AI. Users upload a stock list or screener export (CSV or PDF), and you filter based on criteria they type.\\n\\n### \ud83d\udd0e Process:\\n- Read ticker + indicator data\\n- Match prompt criteria\\n\\n### \u2728 Example Output:\\n- **Top Matches:** ...\\n- **Why These Were Chosen:** ...\\n- **Watchlist Creation:** ..."
-  ],
-  [
-    "Sentiment Snapshot Analyzer",
-    "You are a Sentiment AI trained to read crowd mood via Reddit, Twitter, or headlines (as screenshots or text).\\n\\n### \ud83e\udde0 Detect:\\n- Bullish/Bearish skew\\n- Herd behavior\\n- FOMO/FUD patterns\\n\\n### \ud83d\udcc9 Output Format:\\n- **Overall Sentiment:** ...\\n- **Crowd Emotion Level:** ...\\n- **Contrarian Signal?** Yes/No\\n- **Suggested Strategy:** ..."
-  ],
-  [
-    "PineScript Generator",
-    "You are a PineScript Generator AI. Given a prompt + description + strategy idea, write clean and commented PineScript code.\\n\\n### \ud83d\udcd8 Input Needed:\\n- Strategy description\\n- Key indicators / logic\\n\\n### \ud83e\udde0 Output:\\n- Clean v5 PineScript\\n- Comments for each block\\n- Usage explanation\\n\\nAlways validate code structure and add // comments."
-  ]
+  {
+    "title": "Swing Trade Setup Generator",
+    "description": "Get optimal swing trade setups based on technical indicators.",
+    "category": "Trading",
+    "prompt": "Generate swing trade setups using the following stock symbol: {{stock_symbol}}. Consider the preferred timeframe of {{timeframe}}, and apply these indicators: {{indicators}}. Suggest entry price, stop-loss, and target zones.",
+    "inputs": [
+      { "name": "stock_symbol", "type": "input", "description": "Enter stock symbol (e.g., AAPL)" },
+      { "name": "timeframe", "type": "input", "description": "Preferred timeframe (e.g., 4H, Daily)" },
+      { "name": "indicators", "type": "textarea", "description": "Technical indicators to use" }
+    ]
+  },
+  {
+    "title": "Breakout Scanner Prompt",
+    "description": "Identify potential breakout trades based on volume & price action.",
+    "category": "Trading",
+    "prompt": "Scan for breakout opportunities on timeframe {{timeframe}} using price action rules and volume spikes. Focus on sector: {{sector}} and signal: {{signal_type}}.",
+    "inputs": [
+      { "name": "timeframe", "type": "input", "description": "Chart timeframe to analyze" },
+      { "name": "sector", "type": "input", "description": "Sector to focus on (e.g., Tech, Energy)" },
+      { "name": "signal_type", "type": "input", "description": "Type of breakout signal (e.g., flag, wedge)" }
+    ]
+  },
+  {
+    "title": "Backtest Trading Strategy",
+    "description": "Backtest your trading strategy using past data.",
+    "category": "Trading",
+    "prompt": "Backtest this trading strategy: {{strategy_description}} on {{stock_symbol}} over the last {{duration}} using {{timeframe}} data. Show win/loss ratio, drawdown, and equity curve summary.",
+    "inputs": [
+      { "name": "strategy_description", "type": "textarea", "description": "Describe your trading strategy" },
+      { "name": "stock_symbol", "type": "input", "description": "Enter a stock symbol" },
+      { "name": "duration", "type": "input", "description": "Duration to test (e.g., 6 months)" },
+      { "name": "timeframe", "type": "input", "description": "Timeframe to use" }
+    ]
+  },
+  {
+    "title": "Price Action Trade Ideas",
+    "description": "Generate trade ideas using pure price action techniques.",
+    "category": "Trading",
+    "prompt": "Using pure price action, generate 3 trade ideas for {{stock_symbol}} on the {{timeframe}} timeframe. Use recent swing highs/lows and candle patterns like {{patterns}}.",
+    "inputs": [
+      { "name": "stock_symbol", "type": "input", "description": "Stock or asset symbol" },
+      { "name": "timeframe", "type": "input", "description": "Chart timeframe (e.g., Daily)" },
+      { "name": "patterns", "type": "textarea", "description": "Price action patterns to focus on" }
+    ]
+  },
+  {
+    "title": "Trading Journal Analyzer",
+    "description": "Analyze your trading journal to find strengths and weaknesses.",
+    "category": "Trading",
+    "prompt": "Analyze the following trading journal: {{trading_journal}}. Summarize top mistakes, profitable setups, win rate, and emotional patterns. Suggest improvements.",
+    "inputs": [
+      { "name": "trading_journal", "type": "textarea", "description": "Paste your trading journal notes or summary" }
+    ]
+  },
+  {
+    "title": "Intraday Trading Signal Generator",
+    "description": "Get intraday trading signals based on scalping techniques.",
+    "category": "Trading",
+    "prompt": "Based on {{stock_symbol}}, generate intraday trading signals for the {{timeframe}} timeframe. Use scalping techniques with {{indicators}} and give clear entry, exit, and stop-loss levels.",
+    "inputs": [
+      { "name": "stock_symbol", "type": "input", "description": "Asset or stock symbol" },
+      { "name": "timeframe", "type": "input", "description": "Timeframe (e.g., 5min, 15min)" },
+      { "name": "indicators", "type": "textarea", "description": "List of scalping indicators" }
+    ]
+  },
+  {
+    "title": "Multi-Timeframe Trade Validator",
+    "description": "Check trade idea validity across multiple timeframes.",
+    "category": "Trading",
+    "prompt": "Validate the trade idea: {{trade_idea}} using the following timeframes: {{timeframes}}. Focus on trend alignment, confluence, and risk zones.",
+    "inputs": [
+      { "name": "trade_idea", "type": "textarea", "description": "Describe your trade idea" },
+      { "name": "timeframes", "type": "input", "description": "List of timeframes (e.g., 1H, 4H, Daily)" }
+    ]
+  },
+  {
+    "title": "Trade Risk Calculator",
+    "description": "Calculate position size, risk-reward ratio, and stop loss.",
+    "category": "Trading",
+    "prompt": "For a trading account of size ${{account_size}}, calculate the ideal position size, entry price, stop loss, and take profit based on risk percentage {{risk_percent}} and entry at {{entry_price}} with stop at {{stop_price}}.",
+    "inputs": [
+      { "name": "account_size", "type": "input", "description": "Account size in USD" },
+      { "name": "risk_percent", "type": "input", "description": "Risk per trade (%)" },
+      { "name": "entry_price", "type": "input", "description": "Planned entry price" },
+      { "name": "stop_price", "type": "input", "description": "Planned stop-loss price" }
+    ]
+  },
+  {
+    "title": "Sector Rotation Analyzer",
+    "description": "Find which sectors are gaining or losing strength.",
+    "category": "Trading",
+    "prompt": "Analyze sector rotation trends over the last {{duration}}. Identify strong vs weak sectors and suggest long/short trade ideas using ETFs or top sector stocks.",
+    "inputs": [
+      { "name": "duration", "type": "input", "description": "Timeframe to analyze (e.g., 1 month, 3 months)" }
+    ]
+  },
+  {
+    "title": "Macroeconomic Event Trade Plan",
+    "description": "Create a trade plan around an upcoming macroeconomic event.",
+    "category": "Trading",
+    "prompt": "Build a trade plan for the event: {{event_name}} scheduled on {{event_date}}. Include potential market reaction, asset impact (like {{assets}}), and pre-event vs post-event trading strategies.",
+    "inputs": [
+      { "name": "event_name", "type": "input", "description": "Name of the event (e.g., FOMC, CPI)" },
+      { "name": "event_date", "type": "input", "description": "Scheduled date" },
+      { "name": "assets", "type": "textarea", "description": "Assets or sectors affected" }
+    ]
+  }
 ]
