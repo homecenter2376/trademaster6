@@ -1,17 +1,27 @@
 [
   {
-    "id": "dalle3",
-    "name": "Dalle3",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/dalle/openapi.json"
+    "id": "coinmarketsearch",
+    "name": "CoinMarketSearch",
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/coinmarketcap/openapi.json"
   },
   {
-    "id": "arxivsearch",
-    "name": "ArxivSearch",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/arxivsearch/openapi.json"
+    "id": "tradingsignalhub",
+    "name": "TradingSignalHub",
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/cryptosignals/openapi.json"
   },
   {
-    "id": "duckduckgolite",
-    "name": "DuckDuckGoLiteSearch",
-    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/duckduckgolite/openapi.json"
+    "id": "marketnewsdigest",
+    "name": "MarketNewsDigest",
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/financialnews/openapi.json"
+  },
+  {
+    "id": "etflookup",
+    "name": "ETFLookup",
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/etfsearch/openapi.json"
+  },
+  {
+    "id": "insiderflow",
+    "name": "InsiderFlow",
+    "schema": "https://ghp.ci/https://raw.githubusercontent.com/ChatGPTNextWeb/NextChat-Awesome-Plugins/main/plugins/insidertrading/openapi.json"
   }
 ]
