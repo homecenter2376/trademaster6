@@ -274,7 +274,7 @@ function _MarkDownContent(props: { content: string }) {
 
   return (
     <ReactMarkdown
-      remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
+      remarkPlugins={[[RemarkMath], [RemarkGfm], [RemarkBreaks]]}
       rehypePlugins={[
         RehypeKatex,
         [

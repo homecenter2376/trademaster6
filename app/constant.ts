@@ -829,3 +829,6 @@ export const DEFAULT_GA_ID = "G-89WN60ZK2E";
 
 export const SAAS_CHAT_URL = "https://nextchat.club";
 export const SAAS_CHAT_UTM_URL = "https://nextchat.club?utm=github";
+
+export const OPENAI_URL = "https://api.openai.com/v1";
+export const OPENROUTER_URL = "https://openrouter.ai/api/v1";
