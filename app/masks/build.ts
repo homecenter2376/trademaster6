@@ -1,13 +1,10 @@
 import fs from "fs";
 import path from "path";
 import { EN_MASKS } from "./en";
-import { TW_MASKS } from "./tw";
-
 import { type BuiltinMask } from "./typing";
 
 const BUILTIN_MASKS: Record<string, BuiltinMask[]> = {
   en: EN_MASKS,
-  tw: TW_MASKS,
 };
 
 const dirname = path.dirname(__filename);
