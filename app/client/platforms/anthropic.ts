@@ -92,7 +92,7 @@ export class ClaudeApi implements LLMApi {
 
     const modelConfig = {
       ...useAppConfig.getState().modelConfig,
-      ...useChatStore.getState().currentSession().mask.modelConfig,
+      ...useChatStore.getState().currentSession().bot.modelConfig,
       ...{
         model: options.config.model,
       },
@@ -200,9 +200,7 @@ export class ClaudeApi implements LLMApi {
       let index = -1;
       const [tools, funcs] = usePluginStore
         .getState()
-        .getAsTools(
-          useChatStore.getState().currentSession().mask?.plugin || [],
-        );
+        .getAsTools(useChatStore.getState().currentSession().bot?.plugin || []);
       return stream(
         path,
         requestBody,
