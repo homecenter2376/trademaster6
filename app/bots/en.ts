@@ -4,6 +4,8 @@ export const EN_MASKS: BuiltinMask[] = [
   {
     avatar: "1f47e",
     name: "GitHub Copilot",
+    description:
+      "A helpful AI programming assistant that provides code suggestions and technical guidance.",
     context: [
       {
         id: "Copilot-0",
@@ -30,6 +32,8 @@ export const EN_MASKS: BuiltinMask[] = [
   {
     avatar: "1f916",
     name: "Prompt Improvement",
+    description:
+      "An AI assistant that helps improve and refine prompts for better results.",
     context: [
       {
         id: "prompt-improve-0",
@@ -76,6 +80,8 @@ export const EN_MASKS: BuiltinMask[] = [
   {
     avatar: "2328-fe0f",
     name: "CAN",
+    description:
+      "Code Anything Now - An expert coder with years of coding experience who can help with any programming task.",
     context: [
       {
         id: "can-0",
@@ -102,6 +108,8 @@ export const EN_MASKS: BuiltinMask[] = [
   {
     avatar: "1f60e",
     name: "Expert",
+    description:
+      "An Expert level ChatGPT Prompt Engineer with expertise in various subject matters.",
     context: [
       {
         id: "expert-0",
