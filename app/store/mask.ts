@@ -1,12 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+export interface ChatContext {
+  id: string;
+  role: string;
+  content: string;
+  date: string;
+}
+
 export interface Bot {
   id: string;
   name: string;
   avatar?: string;
   description: string;
-  context: string[];
+  context: ChatContext[];
   hideContext?: boolean;
   enableArtifacts?: boolean;
   enableCodeFold?: boolean;
