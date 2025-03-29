@@ -18,7 +18,6 @@ import { useChatStore } from "../store";
 
 import { useAppConfig } from "../store/config";
 import clsx from "clsx";
-import styles from "./markdown.module.scss";
 
 export function Mermaid(props: { code: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -308,17 +307,7 @@ export function Markdown(
   const mdRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div
-      className="markdown-body"
-      style={{
-        fontSize: `${props.fontSize ?? 14}px`,
-        fontFamily: props.fontFamily || "inherit",
-      }}
-      ref={mdRef}
-      onContextMenu={props.onContextMenu}
-      onDoubleClickCapture={props.onDoubleClickCapture}
-      dir="auto"
-    >
+    <div className="markdown-body">
       {props.loading ? (
         <LoadingIcon />
       ) : (
