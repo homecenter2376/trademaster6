@@ -534,16 +534,20 @@ export function ImagePreviewer(props: {
             </div>
             <div className={styles["icons"]}>
               <MaskAvatar avatar={config.avatar} />
-              <span className={styles["icon-space"]}>&</span>
-              <MaskAvatar
-                avatar={mask.avatar}
-                model={session.mask.modelConfig.model}
-              />
+              <div className={styles["mask-row"]}>
+                <div className={styles["mask-icon"]}>
+                  <span className={styles["icon-space"]}>&</span>
+                  <MaskAvatar
+                    avatar={mask?.avatar || ""}
+                    model={mask?.modelConfig?.model || ""}
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div>
             <div className={styles["chat-info-item"]}>
-              {Locale.Exporter.Model}: {mask.modelConfig.model}
+              {Locale.Exporter.Model}: {mask?.modelConfig?.model || ""}
             </div>
             <div className={styles["chat-info-item"]}>
               {Locale.Exporter.Messages}: {props.messages.length}
@@ -570,8 +574,8 @@ export function ImagePreviewer(props: {
                   <Avatar avatar={config.avatar}></Avatar>
                 ) : (
                   <MaskAvatar
-                    avatar={session.mask.avatar}
-                    model={m.model || session.mask.modelConfig.model}
+                    avatar={session.mask?.avatar || ""}
+                    model={m.model || session.mask?.modelConfig?.model || ""}
                   />
                 )}
               </div>

@@ -117,7 +117,7 @@ export function RealtimeChat({
         console.error("Failed to stop recording:", error);
       }
     }
-  }, [isRecording, useVAD]);
+  }, [isRecording, useVAD, handleInputAudio]);
 
   const handleClose = useCallback(() => {
     onClose?.();
@@ -147,8 +147,8 @@ export function RealtimeChat({
             onError: handleError,
             endpoint: azure ? azureEndpoint : undefined,
             deployment: azure ? azureDeployment : undefined,
-          },
-          { useVAD },
+          } as any,
+          { useVAD } as any,
         );
         setIsConnected(true);
       } catch (error) {
