@@ -45,6 +45,7 @@ export interface Bot {
   memoryPrompt?: string;
   lastSummarizeIndex?: number;
   clearContextIndex?: number;
+  plugin?: any[];
 }
 
 // Alias for backward compatibility
