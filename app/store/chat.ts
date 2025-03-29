@@ -32,13 +32,14 @@ import Locale, { getLang } from "../locales";
 import { prettyObject } from "../utils/format";
 import { createPersistStore } from "../utils/store";
 import { estimateTokenLength } from "../utils/token";
-import { ModelConfig, ModelType, useAppConfig } from "./config";
+import { ModelConfig, useAppConfig } from "./config";
 import { useAccessStore } from "./access";
 import { collectModelsWithDefaultModel } from "../utils/model";
 import { executeMcpAction, getAllTools, isMcpEnabled } from "../mcp/actions";
 import { extractMcpJson, isMcpJson } from "../mcp/utils";
 import { useFeatureStore } from "../config/features";
-import { Bot, createEmptyBot } from "./mask";
+import { Bot, createEmptyBot, ChatContext } from "./mask";
+import { ChatMessage } from "./message";
 
 const localStorage = safeLocalStorage();
 
@@ -54,27 +55,6 @@ export type ChatMessageTool = {
   isError?: boolean;
   errorMsg?: string;
 };
-
-export type ChatMessage = RequestMessage & {
-  date: string;
-  streaming?: boolean;
-  isError?: boolean;
-  id: string;
-  model?: ModelType;
-  tools?: ChatMessageTool[];
-  audio_url?: string;
-  isMcpResponse?: boolean;
-};
-
-export function createMessage(override: Partial<ChatMessage>): ChatMessage {
-  return {
-    id: nanoid(),
-    date: new Date().toLocaleString(),
-    role: "user",
-    content: "",
-    ...override,
-  };
-}
 
 export interface ChatStat {
   tokenCount: number;
@@ -99,6 +79,51 @@ export interface ChatSession {
       model: string;
     };
   };
+  memoryPrompt: string;
+  lastSummarizeIndex: number;
+}
+
+export function createMessage(
+  contentOrMessage:
+    | string
+    | MultimodalContent[]
+    | (Partial<ChatMessage> & { isMcpResponse?: boolean }),
+  role: ChatMessage["role"] = "user",
+): ChatMessage {
+  if (typeof contentOrMessage === "object") {
+    if (Array.isArray(contentOrMessage)) {
+      return {
+        id: Date.now().toString(),
+        role,
+        content: contentOrMessage,
+        date: new Date().toISOString(),
+      };
+    }
+    return {
+      id: Date.now().toString(),
+      role: contentOrMessage.role ?? role,
+      content: contentOrMessage.content ?? "",
+      date: contentOrMessage.date ?? new Date().toISOString(),
+      streaming: contentOrMessage.streaming,
+      isError: contentOrMessage.isError,
+      model: contentOrMessage.model,
+      tools: contentOrMessage.tools,
+      audio_url: contentOrMessage.audio_url,
+    };
+  }
+  return {
+    id: Date.now().toString(),
+    role,
+    content: contentOrMessage,
+    date: new Date().toISOString(),
+  };
+}
+
+export function convertToRequestMessage(message: ChatMessage): RequestMessage {
+  return {
+    role: message.role,
+    content: message.content,
+  };
 }
 
 export const DEFAULT_TOPIC = Locale.Store.DefaultTopic;
@@ -109,12 +134,15 @@ export const BOT_HELLO: ChatMessage = createMessage({
 
 export function createEmptySession(): ChatSession {
   return {
-    id: nanoid(),
+    id: Date.now().toString(),
     topic: DEFAULT_TOPIC,
+    memoryPrompt: "",
     messages: [],
     bot: createEmptyBot(),
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    mask: undefined,
+    lastSummarizeIndex: 0,
   };
 }
 
@@ -518,7 +546,7 @@ export const useChatStore = createPersistStore(
       getMemoryPrompt() {
         const session = get().currentSession();
 
-        if (session.bot.memoryPrompt.length) {
+        if (session.bot.memoryPrompt && session.bot.memoryPrompt.length) {
           return {
             role: "system",
             content: Locale.Store.Prompt.History(session.bot.memoryPrompt),
@@ -580,10 +608,10 @@ export const useChatStore = createPersistStore(
           modelConfig.sendMemory &&
           session.bot.memoryPrompt &&
           session.bot.memoryPrompt.length > 0 &&
-          session.bot.lastSummarizeIndex > clearContextIndex;
+          (session.bot.lastSummarizeIndex ?? 0) > clearContextIndex;
         const longTermMemoryPrompts =
           shouldSendLongTermMemory && memoryPrompt ? [memoryPrompt] : [];
-        const longTermMemoryStartIndex = session.bot.lastSummarizeIndex;
+        const longTermMemoryStartIndex = session.bot.lastSummarizeIndex ?? 0;
 
         // short term memory
         const shortTermMemoryStartIndex = Math.max(
@@ -713,7 +741,7 @@ export const useChatStore = createPersistStore(
           });
         }
         const summarizeIndex = Math.max(
-          session.bot.lastSummarizeIndex,
+          session.bot.lastSummarizeIndex ?? 0,
           session.bot.clearContextIndex ?? 0,
         );
         let toBeSummarizedMsgs = messages
@@ -786,7 +814,6 @@ export const useChatStore = createPersistStore(
 
       updateStat(message: ChatMessage, session: ChatSession) {
         get().updateTargetSession(session, (session) => {
-          session.bot.charCount += message.content.length;
           // TODO: should update chat count and word count
         });
       },
@@ -982,7 +1009,7 @@ export function updateSessionTopic(session: ChatSession, topic: string) {
 
 export function updateSessionMessages(
   session: ChatSession,
-  updater: (messages: Message[]) => void,
+  updater: (messages: ChatMessage[]) => void,
 ) {
   const newSession = { ...session };
   updater(newSession.messages);
@@ -993,7 +1020,7 @@ export function updateSessionMessages(
 export function updateSessionMessage(
   session: ChatSession,
   messageId: string,
-  updater: (message: Message) => void,
+  updater: (message: ChatMessage) => void,
 ) {
   const newSession = { ...session };
   const index = newSession.messages.findIndex((m) => m.id === messageId);
@@ -1043,7 +1070,7 @@ export function updateSessionBotModelConfig(
 
 export function updateSessionBotContext(
   session: ChatSession,
-  updater: (context: string[]) => void,
+  updater: (context: ChatContext[]) => void,
 ) {
   const newSession = { ...session };
   updater(newSession.bot.context);
@@ -1200,7 +1227,7 @@ export function updateSessionBotTemplate(
 
 export function updateSessionBotProviderName(
   session: ChatSession,
-  providerName: string,
+  providerName: ServiceProvider,
 ) {
   const newSession = { ...session };
   newSession.bot.modelConfig.providerName = providerName;
@@ -1226,4 +1253,21 @@ export function updateSessionBotCompressProviderName(
   newSession.bot.modelConfig.compressProviderName = compressProviderName;
   newSession.updatedAt = Date.now();
   return newSession;
+}
+
+export function getCharCount(bot: Bot): number {
+  return bot.context.reduce((acc, msg) => {
+    if (typeof msg.content === "string") {
+      return acc + msg.content.length;
+    }
+    return (
+      acc +
+      msg.content.reduce((sum, content) => {
+        if (content.type === "text" && content.text) {
+          return sum + content.text.length;
+        }
+        return sum;
+      }, 0)
+    );
+  }, 0);
 }

@@ -1,7 +1,9 @@
+import { MultimodalContent as ApiMultimodalContent } from "../client/api";
+
 export interface ChatMessage {
   id: string;
   role: "system" | "user" | "assistant";
-  content: string | MultimodalContent[];
+  content: string | ApiMultimodalContent[];
   date: string;
   streaming?: boolean;
   isError?: boolean;
@@ -17,8 +19,4 @@ export interface ChatMessage {
   audio_url?: string;
 }
 
-export interface MultimodalContent {
-  type: "text" | "image";
-  text?: string;
-  image_url?: string;
-}
+export type MultimodalContent = ApiMultimodalContent;
