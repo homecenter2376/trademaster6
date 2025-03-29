@@ -5,19 +5,13 @@ import PowerIcon from "@/app/icons/power.svg";
 import styles from "./realtime-chat.module.scss";
 import clsx from "clsx";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 import { useChatStore, createMessage, useAppConfig } from "@/app/store";
 
 import { IconButton } from "@/app/components/button";
 
-import {
-  Modality,
-  RTClient,
-  RTInputAudioItem,
-  RTResponse,
-  TurnDetection,
-} from "rt-client";
+import { RTClient, RTInputAudioItem, RTResponse } from "rt-client";
 import { AudioHandler } from "@/app/lib/audio";
 import { uploadImage } from "@/app/utils/chat";
 import { VoicePrint } from "@/app/components/voice-print";
@@ -56,67 +50,16 @@ export function RealtimeChat({
   const azureDeployment = config.realtimeConfig.azure.deployment;
   const voice = config.realtimeConfig.voice;
 
-  const handleConnect = async () => {
-    if (isConnecting) return;
-    if (!isConnected) {
-      try {
-        setIsConnecting(true);
-        clientRef.current = azure
-          ? new RTClient(
-              new URL(azureEndpoint),
-              { key: apiKey },
-              { deployment: azureDeployment },
-            )
-          : new RTClient({ key: apiKey }, { model });
-        const modalities: Modality[] =
-          modality === "audio" ? ["text", "audio"] : ["text"];
-        const turnDetection: TurnDetection = useVAD
-          ? { type: "server_vad" }
-          : null;
-        await clientRef.current.configure({
-          instructions: "",
-          voice,
-          input_audio_transcription: { model: "whisper-1" },
-          turn_detection: turnDetection,
-          tools: [],
-          temperature,
-          modalities,
-        });
-        startResponseListener();
-
-        setIsConnected(true);
-        // TODO
-        // try {
-        //   const recentMessages = chatStore.getMessagesWithMemory();
-        //   for (const message of recentMessages) {
-        //     const { role, content } = message;
-        //     if (typeof content === "string") {
-        //       await clientRef.current.sendItem({
-        //         type: "message",
-        //         role: role as any,
-        //         content: [
-        //           {
-        //             type: (role === "assistant" ? "text" : "input_text") as any,
-        //             text: content as string,
-        //           },
-        //         ],
-        //       });
-        //     }
-        //   }
-        //   // await clientRef.current.generateResponse();
-        // } catch (error) {
-        //   console.error("Set message failed:", error);
-        // }
-      } catch (error) {
-        console.error("Connection failed:", error);
-        setStatus("Connection failed");
-      } finally {
-        setIsConnecting(false);
-      }
-    } else {
-      await disconnect();
+  const handleConnect = useCallback(() => {
+    if (!clientRef.current) {
+      clientRef.current = new RTClient({
+        onMessage: handleMessage,
+        onClose: handleClose,
+        onError: handleError,
+      });
     }
-  };
+    clientRef.current.connect();
+  }, [handleMessage, handleClose, handleError]);
 
   const disconnect = async () => {
     if (clientRef.current) {
@@ -282,7 +225,7 @@ export function RealtimeChat({
       audioHandlerRef.current?.close().catch(console.error);
       disconnect();
     };
-  }, []);
+  }, [isRecording, handleConnect, toggleRecording]);
 
   useEffect(() => {
     let animationFrameId: number;

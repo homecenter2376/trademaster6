@@ -10,17 +10,11 @@ import { copyToClipboard, useWindowSize } from "../utils";
 import mermaid from "mermaid";
 import Locale from "../locales";
 import LoadingIcon from "../icons/three-dots.svg";
-import ReloadButtonIcon from "../icons/reload.svg";
 import React from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { showImageModal, FullScreen } from "./ui-lib";
-import {
-  ArtifactsShareButton,
-  HTMLPreview,
-  HTMLPreviewHander,
-} from "./artifacts";
+import { showImageModal } from "./ui-lib";
+import { HTMLPreviewHander } from "./artifacts";
 import { useChatStore } from "../store";
-import { IconButton } from "./button";
 
 import { useAppConfig } from "../store/config";
 import clsx from "clsx";
@@ -74,6 +68,7 @@ export function Mermaid(props: { code: string }) {
 export function PreCode(props: {
   children: any;
   renderArtifacts?: () => void;
+  lang?: string;
 }) {
   const ref = useRef<HTMLPreElement>(null);
   const previewRef = useRef<HTMLPreviewHander>(null);
@@ -140,45 +135,17 @@ export function PreCode(props: {
   }, [props.renderArtifacts, renderArtifacts]);
 
   return (
-    <>
-      <pre ref={ref}>
-        <span
-          className="copy-code-button"
-          onClick={() => {
-            if (ref.current) {
-              copyToClipboard(
-                ref.current.querySelector("code")?.innerText ?? "",
-              );
-            }
-          }}
-        ></span>
-        {props.children}
-      </pre>
-      {mermaidCode.length > 0 && (
-        <Mermaid code={mermaidCode} key={mermaidCode} />
-      )}
-      {htmlCode.length > 0 && enableArtifacts && (
-        <FullScreen className="no-dark html" right={70}>
-          <ArtifactsShareButton
-            style={{ position: "absolute", right: 20, top: 10 }}
-            getCode={() => htmlCode}
-          />
-          <IconButton
-            style={{ position: "absolute", right: 120, top: 10 }}
-            bordered
-            icon={<ReloadButtonIcon />}
-            shadow
-            onClick={() => previewRef.current?.reload()}
-          />
-          <HTMLPreview
-            ref={previewRef}
-            code={htmlCode}
-            autoHeight={!document.fullscreenElement}
-            height={!document.fullscreenElement ? 600 : height}
-          />
-        </FullScreen>
-      )}
-    </>
+    <pre ref={ref} className={`${styles["pre"]} language-${props.lang ?? ""}`}>
+      <span
+        className="copy-code-button"
+        onClick={() => {
+          if (ref.current) {
+            copyToClipboard(ref.current.querySelector("code")?.innerText ?? "");
+          }
+        }}
+      ></span>
+      {props.children}
+    </pre>
   );
 }
 

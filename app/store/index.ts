@@ -13,8 +13,8 @@ export interface ChatSession {
   memoryPrompt: string;
   messages: ChatMessage[];
   date: string;
-  mask: {
-    context: ChatMessage[];
+  mask?: {
+    context?: ChatMessage[];
     enableArtifacts?: boolean;
     enableCodeFold?: boolean;
   };

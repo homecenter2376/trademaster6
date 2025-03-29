@@ -37,6 +37,7 @@ import { SideBar } from "./sd-sidebar";
 import { WindowContent } from "@/app/components/home";
 import { params } from "./sd-panel";
 import clsx from "clsx";
+import Image from "next/image";
 
 function getSdTaskStatus(item: any) {
   let s: string;
@@ -103,7 +104,7 @@ export function Sd() {
     if (sdStore.draw) {
       sdStore.draw();
     }
-  }, [sdStore.draw]);
+  }, [sdStore]);
 
   return (
     <>
@@ -164,10 +165,13 @@ export function Sd() {
                       className={styles["sd-img-item"]}
                     >
                       {item.status === "success" ? (
-                        <img
+                        <Image
                           className={styles["img"]}
                           src={item.img_data}
                           alt={item.id}
+                          width={512}
+                          height={512}
+                          style={{ maxWidth: "100%", height: "auto" }}
                           onClick={(e) =>
                             showImageModal(
                               item.img_data,

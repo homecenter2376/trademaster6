@@ -1033,7 +1033,7 @@ function _Chat() {
       scrollRef.current.getBoundingClientRect().top;
     // leave some space for user question
     return topDistance < 100;
-  }, [scrollRef.current]);
+  }, []);
 
   const isTyping = userInput !== "";
 
