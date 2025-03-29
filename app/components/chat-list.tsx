@@ -14,7 +14,7 @@ import Locale from "../locales";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Path } from "../constant";
 import { MaskAvatar } from "./mask";
-import { Mask } from "../store/mask";
+import { Mask, DEFAULT_BOT_AVATAR } from "../store/mask";
 import { useRef, useEffect } from "react";
 import { showConfirm } from "./ui-lib";
 import { useMobileScreen } from "../utils";
@@ -66,7 +66,7 @@ export function ChatItem(props: {
             <div className={styles["chat-item-narrow"]}>
               <div className={clsx(styles["chat-item-avatar"], "no-dark")}>
                 <MaskAvatar
-                  avatar={props.mask.avatar}
+                  avatar={props.mask.avatar || DEFAULT_BOT_AVATAR}
                   model={props.mask.modelConfig.model}
                 />
               </div>
@@ -143,7 +143,7 @@ export function ChatList(props: { narrow?: boolean }) {
             {sessions.map((item, i) => (
               <ChatItem
                 title={item.topic}
-                time={new Date(item.lastUpdate).toLocaleString()}
+                time={new Date(item.updatedAt).toLocaleString()}
                 count={item.messages.length}
                 key={item.id}
                 id={item.id}
@@ -162,7 +162,7 @@ export function ChatList(props: { narrow?: boolean }) {
                   }
                 }}
                 narrow={props.narrow}
-                mask={item.mask}
+                mask={item.bot}
               />
             ))}
             {provided.placeholder}
