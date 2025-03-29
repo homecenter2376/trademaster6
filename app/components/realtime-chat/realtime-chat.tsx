@@ -140,7 +140,7 @@ export function RealtimeChat({
       try {
         clientRef.current = new RTClient(
           {
-            apiKey,
+            key: apiKey,
             model,
             onMessage: handleMessage,
             onClose: handleClose,

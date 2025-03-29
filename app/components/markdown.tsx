@@ -135,7 +135,7 @@ export function PreCode(props: {
   }, [props.renderArtifacts, renderArtifacts]);
 
   return (
-    <pre ref={ref} className={`${styles["pre"]} language-${props.lang ?? ""}`}>
+    <pre ref={ref} className={`pre-code language-${props.lang ?? ""}`}>
       <span
         className="copy-code-button"
         onClick={() => {

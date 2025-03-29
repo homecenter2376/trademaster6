@@ -90,6 +90,15 @@ export interface ChatSession {
   createdAt: number;
   updatedAt: number;
   clearContextIndex?: number;
+  mask?: {
+    context?: ChatMessage[];
+    enableArtifacts?: boolean;
+    enableCodeFold?: boolean;
+    avatar?: string;
+    modelConfig?: {
+      model: string;
+    };
+  };
 }
 
 export const DEFAULT_TOPIC = Locale.Store.DefaultTopic;
