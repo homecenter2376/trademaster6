@@ -46,7 +46,7 @@ import {
 } from "../utils";
 import { Updater } from "../typing";
 import { ModelConfigList } from "./model-config";
-import { FileName, Path } from "../constant";
+import { Path } from "../constant";
 import { BUILTIN_MASK_STORE } from "../bots";
 import {
   DragDropContext,
@@ -441,12 +441,40 @@ export function ContextPrompts(props: {
 
 export function MaskPage() {
   const navigate = useNavigate();
-
   const maskStore = useBotStore();
   const chatStore = useChatStore();
   const appConfig = useAppConfig();
 
-  const filterLang = maskStore.language;
+  const [editingMaskId, setEditingMaskId] = useState<string | undefined>();
+  const editingMask = editingMaskId
+    ? maskStore.get(editingMaskId) ?? BUILTIN_MASK_STORE.get(editingMaskId)
+    : undefined;
+
+  const handleCreateMask = () => {
+    maskStore.create();
+    // The create method doesn't return anything, so we need to get the last created bot
+    const allBots = maskStore.getAll();
+    const lastBot = allBots[allBots.length - 1];
+    if (lastBot) {
+      setEditingMaskId(lastBot.id);
+    }
+  };
+
+  const handleDeleteMask = async (id: string) => {
+    if (await showConfirm(Locale.Mask.Item.DeleteConfirm)) {
+      maskStore.deleteBot(id);
+    }
+  };
+
+  const handleCloneMask = () => {
+    if (editingMask) {
+      navigate(Path.NewChat);
+      maskStore.create(editingMask);
+      setEditingMaskId(undefined);
+    }
+  };
+
+  const filterLang = maskStore.language ?? "";
 
   const allMasks = maskStore
     .getAll()
@@ -469,13 +497,10 @@ export function MaskPage() {
     }
   };
 
-  const [editingMaskId, setEditingMaskId] = useState<string | undefined>();
-  const editingMask =
-    maskStore.get(editingMaskId) ?? BUILTIN_MASK_STORE.get(editingMaskId);
   const closeMaskModal = () => setEditingMaskId(undefined);
 
   const downloadAll = () => {
-    downloadAs(JSON.stringify(masks.filter((v) => !v.builtin)), FileName.Masks);
+    downloadAs(JSON.stringify(masks.filter((v) => !v.builtin)), "masks.json");
   };
 
   const importFromFile = () => {
@@ -497,6 +522,14 @@ export function MaskPage() {
         }
       } catch {}
     });
+  };
+
+  const handleLanguageChange = (value: string) => {
+    if (value === Locale.Settings.Lang.All) {
+      maskStore.language = undefined;
+    } else {
+      maskStore.language = value as Lang;
+    }
   };
 
   return (
@@ -557,11 +590,7 @@ export function MaskPage() {
               value={filterLang ?? Locale.Settings.Lang.All}
               onChange={(e) => {
                 const value = e.currentTarget.value;
-                if (value === Locale.Settings.Lang.All) {
-                  maskStore.setLanguage(undefined);
-                } else {
-                  maskStore.setLanguage(value as Lang);
-                }
+                handleLanguageChange(value);
               }}
             >
               <option key="all" value={Locale.Settings.Lang.All}>
@@ -580,10 +609,7 @@ export function MaskPage() {
                 icon={<AddIcon />}
                 text={Locale.Mask.Page.Create}
                 bordered
-                onClick={() => {
-                  const createdMask = maskStore.create();
-                  setEditingMaskId(createdMask.id);
-                }}
+                onClick={handleCreateMask}
               />
             )}
           </div>
@@ -593,14 +619,21 @@ export function MaskPage() {
               <div className={styles["mask-item"]} key={m.id}>
                 <div className={styles["mask-header"]}>
                   <div className={styles["mask-icon"]}>
-                    <MaskAvatar avatar={m.avatar} model={m.modelConfig.model} />
+                    <MaskAvatar
+                      avatar={m.avatar || ""}
+                      model={m.modelConfig?.model || ""}
+                    />
                   </div>
                   <div className={styles["mask-title"]}>
                     <div className={styles["mask-name"]}>{m.name}</div>
                     <div className={clsx(styles["mask-info"], "one-line")}>
                       {`${Locale.Mask.Item.Info(m.context.length)} / ${
-                        ALL_LANG_OPTIONS[m.lang]
-                      } / ${m.modelConfig.model}`}
+                        m.lang && m.lang in ALL_LANG_OPTIONS
+                          ? ALL_LANG_OPTIONS[
+                              m.lang as keyof typeof ALL_LANG_OPTIONS
+                            ]
+                          : ""
+                      } / ${m.modelConfig?.model || ""}`}
                     </div>
                   </div>
                 </div>
@@ -633,9 +666,7 @@ export function MaskPage() {
                       icon={<DeleteIcon />}
                       text={Locale.Mask.Item.Delete}
                       onClick={async () => {
-                        if (await showConfirm(Locale.Mask.Item.DeleteConfirm)) {
-                          maskStore.delete(m.id);
-                        }
+                        await handleDeleteMask(m.id);
                       }}
                     />
                   )}
@@ -649,7 +680,7 @@ export function MaskPage() {
       {editingMask && (
         <div className="modal-mask">
           <Modal
-            title={Locale.Mask.EditModal.Title(editingMask?.builtin)}
+            title={Locale.Mask.EditModal.Title(Boolean(editingMask?.builtin))}
             onClose={closeMaskModal}
             actions={[
               <IconButton
@@ -669,20 +700,18 @@ export function MaskPage() {
                 icon={<CopyIcon />}
                 bordered
                 text={Locale.Mask.EditModal.Clone}
-                onClick={() => {
-                  navigate(Path.Masks);
-                  maskStore.create(editingMask);
-                  setEditingMaskId(undefined);
-                }}
+                onClick={handleCloneMask}
               />,
             ]}
           >
             <MaskConfig
               mask={editingMask}
               updateMask={(updater) =>
-                maskStore.updateMask(editingMaskId!, updater)
+                editingMaskId
+                  ? maskStore.updateBot(editingMaskId, updater)
+                  : undefined
               }
-              readonly={editingMask.builtin}
+              readonly={Boolean(editingMask?.builtin)}
             />
           </Modal>
         </div>

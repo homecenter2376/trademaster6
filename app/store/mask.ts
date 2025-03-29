@@ -103,7 +103,7 @@ interface BotStore {
   getAllBots: () => Bot[];
   get: (id: string) => Bot | undefined;
   getAll: () => Bot[];
-  language: string;
+  language: string | undefined;
 }
 
 export const useBotStore = create<BotStore>()(
