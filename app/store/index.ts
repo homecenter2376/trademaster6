@@ -17,6 +17,10 @@ export interface ChatSession {
     context?: ChatMessage[];
     enableArtifacts?: boolean;
     enableCodeFold?: boolean;
+    avatar?: string;
+    modelConfig?: {
+      model: string;
+    };
   };
   clearContextIndex?: number;
   bot: Bot;

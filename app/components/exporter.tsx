@@ -167,19 +167,23 @@ export function MessageExporter() {
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
   const { selection, updateSelection } = useMessageSelector();
-  const selectedMessages = useMemo(() => {
+  const getSelectedMessages = () => {
     const ret: ChatMessage[] = [];
-    if (exportConfig.includeContext) {
+    if (exportConfig.includeContext && session.mask?.context) {
       ret.push(...session.mask.context);
     }
     ret.push(...session.messages.filter((m) => selection.has(m.id)));
     return ret;
-  }, [
-    exportConfig.includeContext,
-    session.messages,
-    session.mask.context,
-    selection,
-  ]);
+  };
+  const selectedMessages = useMemo(
+    () => getSelectedMessages(),
+    [
+      exportConfig.includeContext,
+      session.messages,
+      session.mask?.context,
+      selection,
+    ],
+  );
   function preview() {
     if (exportConfig.format === "text") {
       return (

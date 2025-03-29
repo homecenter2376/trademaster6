@@ -18,6 +18,7 @@ import { useChatStore } from "../store";
 
 import { useAppConfig } from "../store/config";
 import clsx from "clsx";
+import styles from "./markdown.module.scss";
 
 export function Mermaid(props: { code: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -126,7 +127,7 @@ export function PreCode(props: {
       });
       setTimeout(renderArtifacts, 1);
     }
-  }, []);
+  }, [renderArtifacts]);
 
   useEffect(() => {
     if (props.renderArtifacts) {

@@ -97,13 +97,11 @@ export function Sd() {
   const config = useAppConfig();
   const scrollRef = useRef<HTMLDivElement>(null);
   const sdStore = useSdStore();
-  const [sdImages, setSdImages] = useState(sdStore.draw);
+  const [sdImages, setSdImages] = useState(sdStore.draw || []);
   const isSd = location.pathname === Path.Sd;
 
   useEffect(() => {
-    if (sdStore.draw) {
-      sdStore.draw();
-    }
+    setSdImages(sdStore.draw || []);
   }, [sdStore]);
 
   return (

@@ -50,17 +50,6 @@ export function RealtimeChat({
   const azureDeployment = config.realtimeConfig.azure.deployment;
   const voice = config.realtimeConfig.voice;
 
-  const handleConnect = useCallback(() => {
-    if (!clientRef.current) {
-      clientRef.current = new RTClient({
-        onMessage: handleMessage,
-        onClose: handleClose,
-        onError: handleError,
-      });
-    }
-    clientRef.current.connect();
-  }, [handleMessage, handleClose, handleError]);
-
   const disconnect = async () => {
     if (clientRef.current) {
       try {
@@ -72,6 +61,51 @@ export function RealtimeChat({
       }
     }
   };
+
+  const handleClose = useCallback(() => {
+    onClose?.();
+    if (isRecording) {
+      toggleRecording();
+    }
+    disconnect().catch(console.error);
+  }, [isRecording, onClose, toggleRecording]);
+
+  const handleMessage = useCallback(() => {
+    // Empty implementation since it's not used
+  }, []);
+
+  const handleError = useCallback((error: Error) => {
+    console.error("WebSocket error:", error);
+  }, []);
+
+  const handleConnect = useCallback(() => {
+    if (!clientRef.current) {
+      try {
+        clientRef.current = new RTClient({
+          apiKey,
+          model,
+          onMessage: handleMessage,
+          onClose: handleClose,
+          onError: handleError,
+          endpoint: azure ? azureEndpoint : undefined,
+          deployment: azure ? azureDeployment : undefined,
+        });
+        setIsConnected(true);
+      } catch (error) {
+        console.error("Failed to create RTClient:", error);
+        setIsConnected(false);
+      }
+    }
+  }, [
+    apiKey,
+    model,
+    handleMessage,
+    handleClose,
+    handleError,
+    azure,
+    azureEndpoint,
+    azureDeployment,
+  ]);
 
   const startResponseListener = async () => {
     if (!clientRef.current) return;
@@ -171,7 +205,7 @@ export function RealtimeChat({
     audioHandlerRef.current?.stopStreamingPlayback();
   };
 
-  const toggleRecording = async () => {
+  const toggleRecording = useCallback(async () => {
     if (!isRecording && clientRef.current) {
       try {
         if (!audioHandlerRef.current) {
@@ -198,7 +232,7 @@ export function RealtimeChat({
         console.error("Failed to stop recording:", error);
       }
     }
-  };
+  }, [isRecording, useVAD, handleInputAudio]);
 
   useEffect(() => {
     // 防止重复初始化
@@ -264,14 +298,6 @@ export function RealtimeChat({
       handleConnect();
     }
   }, [isRecording, handleConnect]);
-
-  const handleClose = async () => {
-    onClose?.();
-    if (isRecording) {
-      await toggleRecording();
-    }
-    disconnect().catch(console.error);
-  };
 
   return (
     <div className={styles["realtime-chat"]}>
