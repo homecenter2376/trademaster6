@@ -145,9 +145,10 @@ export class GeminiProApi implements LLMApi {
 
     const modelConfig = {
       ...useAppConfig.getState().modelConfig,
-      ...useChatStore.getState().currentSession().mask.modelConfig,
+      ...useChatStore.getState().currentSession().bot.modelConfig,
       ...{
         model: options.config.model,
+        providerName: options.config.providerName,
       },
     };
     const requestPayload = {
@@ -209,7 +210,7 @@ export class GeminiProApi implements LLMApi {
         const [tools, funcs] = usePluginStore
           .getState()
           .getAsTools(
-            useChatStore.getState().currentSession().mask?.plugin || [],
+            useChatStore.getState().currentSession().bot?.plugin || [],
           );
         return stream(
           chatPath,

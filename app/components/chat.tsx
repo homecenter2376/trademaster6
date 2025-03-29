@@ -811,7 +811,7 @@ export function ChatActions(props: {
         {showPluginSelector && (
           <Selector
             multiple
-            defaultSelectedValue={chatStore.currentSession().mask?.plugin}
+            defaultSelectedValue={chatStore.currentSession().bot?.plugin}
             items={pluginStore.getAll().map((item) => ({
               title: `${item?.title}@${item?.version}`,
               value: item?.id,
