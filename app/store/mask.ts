@@ -31,7 +31,11 @@ export interface Bot {
   builtin?: boolean;
 }
 
+// Alias for backward compatibility
+export type Mask = Bot;
+
 export const DEFAULT_BOT_AVATAR = "gpt-bot";
+export const DEFAULT_MASK_AVATAR = DEFAULT_BOT_AVATAR;
 
 export const createEmptyBot = (): Bot => ({
   id: "",
@@ -111,3 +115,6 @@ export const useBotStore = create<BotStore>()(
     },
   ),
 );
+
+// Alias for backward compatibility
+export const useMaskStore = useBotStore;
