@@ -96,7 +96,7 @@ export class QwenApi implements LLMApi {
   async chat(options: ChatOptions) {
     const modelConfig = {
       ...useAppConfig.getState().modelConfig,
-      ...useChatStore.getState().currentSession().mask.modelConfig,
+      ...useChatStore.getState().currentSession().bot.modelConfig,
       ...{
         model: options.config.model,
       },
@@ -159,7 +159,7 @@ export class QwenApi implements LLMApi {
         const [tools, funcs] = usePluginStore
           .getState()
           .getAsTools(
-            useChatStore.getState().currentSession().mask?.plugin || [],
+            useChatStore.getState().currentSession().bot?.plugin || [],
           );
         return streamWithThink(
           chatPath,
