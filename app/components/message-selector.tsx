@@ -5,6 +5,7 @@ import { IconButton } from "./button";
 import { Avatar } from "./emoji";
 import { MaskAvatar } from "./mask";
 import Locale from "../locales";
+import { DEFAULT_BOT_AVATAR } from "../store/mask";
 
 import styles from "./message-selector.module.scss";
 import { getMessageTextContent } from "../utils";
@@ -212,8 +213,8 @@ export function MessageSelector(props: {
                   <Avatar avatar={config.avatar}></Avatar>
                 ) : (
                   <MaskAvatar
-                    avatar={session.mask.avatar}
-                    model={m.model || session.mask.modelConfig.model}
+                    avatar={session.mask?.avatar ?? DEFAULT_BOT_AVATAR}
+                    model={(m.model || session.mask?.modelConfig?.model) ?? ""}
                   />
                 )}
               </div>
