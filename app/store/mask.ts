@@ -3,12 +3,17 @@ import { persist } from "zustand/middleware";
 import { ModelType } from "./config";
 import { ServiceProvider, DEFAULT_INPUT_TEMPLATE } from "../constant";
 import { DalleQuality, DalleStyle, ModelSize } from "../typing";
+import { MultimodalContent } from "../client/api";
 
 export interface ChatContext {
   id: string;
-  role: string;
-  content: string;
+  role: "system" | "user" | "assistant";
+  content: string | MultimodalContent[];
   date: string;
+  preview?: boolean;
+  streaming?: boolean;
+  isError?: boolean;
+  model?: string;
 }
 
 export interface Bot {

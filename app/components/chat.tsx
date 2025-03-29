@@ -109,7 +109,7 @@ import {
   UNFINISHED_INPUT,
 } from "../constant";
 import { Avatar } from "./emoji";
-import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
+import { ContextPrompts, MaskAvatar, MaskConfig, ChatContext } from "./mask";
 import { useMaskStore } from "../store/mask";
 import { ChatCommandPrefix, useChatCommand, useCommand } from "../command";
 import { prettyObject } from "../utils/format";
@@ -125,6 +125,7 @@ import { getModelProvider } from "../utils/model";
 import { RealtimeChat } from "@/app/components/realtime-chat";
 import clsx from "clsx";
 import { getAvailableClientsCount, isMcpEnabled } from "../mcp/actions";
+import { nanoid } from "nanoid";
 
 const localStorage = safeLocalStorage();
 
@@ -991,9 +992,18 @@ export function ShortcutKeyModal(props: { onClose: () => void }) {
   );
 }
 
-function _Chat() {
-  type RenderMessage = ChatMessage & { preview?: boolean };
+type RenderMessage = ChatMessage & { preview?: boolean };
 
+const renderContextMessage = (msg: ChatContext): RenderMessage => ({
+  ...msg,
+  streaming: false,
+  isError: false,
+  model: undefined,
+  preview: false,
+  id: msg.id || nanoid(),
+});
+
+function _Chat() {
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
   const config = useAppConfig();
@@ -1276,8 +1286,23 @@ function _Chat() {
   };
 
   const onPinMessage = (message: ChatMessage) => {
+    const content = Array.isArray(message.content)
+      ? message.content.map((c) => c.text || "").join("")
+      : message.content || "";
+
+    const date = message.date || new Date().toLocaleString();
+
     chatStore.updateTargetSession(session, (session) =>
-      session.bot.context.push(message),
+      session.bot.context.push({
+        id: message.id,
+        role: message.role,
+        content,
+        date,
+        model: message.model,
+        streaming: false,
+        isError: false,
+        preview: false,
+      }),
     );
 
     showToast(Locale.Chat.Actions.PinToastContent, {
@@ -1335,8 +1360,8 @@ function _Chat() {
     }
   }
 
-  const context: RenderMessage[] = useMemo(() => {
-    return session.bot.hideContext ? [] : session.bot.context.slice();
+  const context = useMemo(() => {
+    return session.bot.hideContext ? [] : session.bot.context;
   }, [session.bot.context, session.bot.hideContext]);
 
   if (
