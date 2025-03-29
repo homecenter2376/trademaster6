@@ -1,6 +1,7 @@
 import { ChatMessage } from "./message";
 import { Bot } from "./mask";
 
+export * from "./message";
 export * from "./chat";
 export * from "./update";
 export * from "./access";

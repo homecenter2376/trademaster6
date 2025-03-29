@@ -4,13 +4,9 @@ import {
   ModelProvider,
   ServiceProvider,
 } from "../constant";
-import {
-  ChatMessageTool,
-  ChatMessage,
-  ModelType,
-  useAccessStore,
-  useChatStore,
-} from "../store";
+import { ModelType, useAccessStore, useChatStore } from "../store";
+import { ChatMessage } from "../store/message";
+import { ChatMessageTool } from "../store/chat";
 import { ChatGPTApi, DalleRequestPayload } from "./platforms/openai";
 import { GeminiProApi } from "./platforms/google";
 import { ClaudeApi } from "./platforms/anthropic";
