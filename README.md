@@ -396,6 +396,48 @@ SiliconFlow API Key.
 
 SiliconFlow API URL.
 
+## Deployment Methods
+
+### Vercel Deployment (Recommended)
+
+This project is optimized for deployment on Vercel. Follow these steps to deploy:
+
+1. Ensure all your changes are committed to your repository
+2. Use the following Git commands to deploy:
+   ```bash
+   # Stage all changes
+   git add .
+
+   # Commit changes with a descriptive message
+   git commit -m "Your descriptive commit message"
+
+   # Push to the main branch
+   git push origin main
+   ```
+
+3. Vercel will automatically detect the push and start the deployment process
+4. You can monitor the deployment status in your Vercel dashboard
+
+The deployment will automatically:
+- Build the Next.js application
+- Run necessary checks
+- Deploy to Vercel's global edge network
+
+### Environment Setup
+Make sure you have configured all necessary environment variables in your Vercel project settings:
+- `OPENAI_API_KEY` (required)
+- `CODE` (optional, for access control)
+- Other optional variables as needed
+
+### Troubleshooting
+If you encounter deployment issues:
+1. Check the build logs in Vercel dashboard
+2. Ensure all environment variables are correctly set
+3. Verify that your repository has the latest changes
+4. Check if there are any failed GitHub Actions
+
+For more deployment options, refer to the [FAQ](#faq) section.
+
 ## Requirements
 
 NodeJS >= 18, Docker >= 20

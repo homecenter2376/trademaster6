@@ -38,6 +38,7 @@ import { collectModelsWithDefaultModel } from "../utils/model";
 import { executeMcpAction, getAllTools, isMcpEnabled } from "../mcp/actions";
 import { extractMcpJson, isMcpJson } from "../mcp/utils";
 import { useFeatureStore } from "../config/features";
+import { Bot, createEmptyBot } from "./mask";
 
 const localStorage = safeLocalStorage();
 
@@ -88,6 +89,7 @@ export interface ChatSession {
   bot: Bot;
   createdAt: number;
   updatedAt: number;
+  clearContextIndex?: number;
 }
 
 export const DEFAULT_TOPIC = Locale.Store.DefaultTopic;

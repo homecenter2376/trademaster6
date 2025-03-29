@@ -181,10 +181,13 @@ export function SessionConfigModel(props: { onClose: () => void }) {
             text={Locale.Chat.Config.Reset}
             onClick={async () => {
               if (await showConfirm(Locale.Memory.ResetConfirm)) {
-                chatStore.updateTargetSession(
-                  session,
-                  (session) => (session.memoryPrompt = ""),
-                );
+                chatStore.updateTargetSession(session, (session) => {
+                  session.messages = session.messages.slice(
+                    0,
+                    session.messages.length,
+                  );
+                  session.bot.memoryPrompt = "";
+                });
               }
             }}
           />,
@@ -194,31 +197,33 @@ export function SessionConfigModel(props: { onClose: () => void }) {
             bordered
             text={Locale.Chat.Config.SaveAs}
             onClick={() => {
-              navigate(Path.Masks);
+              navigate(Path.Bots);
               setTimeout(() => {
-                maskStore.create(session.mask);
+                maskStore.create(session.bot);
               }, 500);
             }}
           />,
         ]}
       >
         <MaskConfig
-          mask={session.mask}
+          mask={session.bot}
           updateMask={(updater) => {
-            const mask = { ...session.mask };
-            updater(mask);
+            const bot = { ...session.bot };
+            updater(bot);
             chatStore.updateTargetSession(
               session,
-              (session) => (session.mask = mask),
+              (session) => (session.bot = bot),
             );
           }}
           shouldSyncFromGlobal
           extraListItems={
-            session.mask.modelConfig.sendMemory ? (
+            session.bot.modelConfig.sendMemory ? (
               <ListItem
                 className="copyable"
-                title={`${Locale.Memory.Title} (${session.lastSummarizeIndex} of ${session.messages.length})`}
-                subTitle={session.memoryPrompt || Locale.Memory.EmptyContent}
+                title={`${Locale.Memory.Title} (${session.messages.length})`}
+                subTitle={
+                  session.bot.memoryPrompt || Locale.Memory.EmptyContent
+                }
               ></ListItem>
             ) : (
               <></>
@@ -237,7 +242,7 @@ function PromptToast(props: {
 }) {
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
-  const context = session.mask.context;
+  const context = session.bot.context;
 
   return (
     <div className={styles["prompt-toast"]} key="prompt-toast">
@@ -526,9 +531,9 @@ export function ChatActions(props: {
   const stopAll = () => ChatControllerPool.stopAll();
 
   // switch model
-  const currentModel = session.mask.modelConfig.model;
+  const currentModel = session.bot.modelConfig.model;
   const currentProviderName =
-    session.mask.modelConfig?.providerName || ServiceProvider.OpenAI;
+    session.bot.modelConfig?.providerName || ServiceProvider.OpenAI;
   const allModels = useAllModels();
   const models = useMemo(() => {
     const filteredModels = allModels.filter((m) => m.available);
@@ -563,9 +568,9 @@ export function ChatActions(props: {
   const dalle3Qualitys: DalleQuality[] = ["standard", "hd"];
   const dalle3Styles: DalleStyle[] = ["vivid", "natural"];
   const currentSize =
-    session.mask.modelConfig?.size ?? ("1024x1024" as ModelSize);
-  const currentQuality = session.mask.modelConfig?.quality ?? "standard";
-  const currentStyle = session.mask.modelConfig?.style ?? "vivid";
+    session.bot.modelConfig?.size ?? ("1024x1024" as ModelSize);
+  const currentQuality = session.bot.modelConfig?.quality ?? "standard";
+  const currentStyle = session.bot.modelConfig?.style ?? "vivid";
 
   const isMobileScreen = useMobileScreen();
 
@@ -584,8 +589,8 @@ export function ChatActions(props: {
       // show next model to default model if exist
       let nextModel = models.find((model) => model.isDefault) || models[0];
       chatStore.updateTargetSession(session, (session) => {
-        session.mask.modelConfig.model = nextModel.name;
-        session.mask.modelConfig.providerName = nextModel?.provider
+        session.bot.modelConfig.model = nextModel.name;
+        session.bot.modelConfig.providerName = nextModel?.provider
           ?.providerName as ServiceProvider;
       });
       showToast(
@@ -652,7 +657,7 @@ export function ChatActions(props: {
 
         <ChatAction
           onClick={() => {
-            navigate(Path.Masks);
+            navigate(Path.Bots);
           }}
           text={Locale.Chat.InputActions.Masks}
           icon={<MaskIcon />}
@@ -667,7 +672,7 @@ export function ChatActions(props: {
                 session.clearContextIndex = undefined;
               } else {
                 session.clearContextIndex = session.messages.length;
-                session.memoryPrompt = ""; // will clear memory
+                session.bot.memoryPrompt = ""; // will clear memory
               }
             });
           }}
@@ -695,10 +700,10 @@ export function ChatActions(props: {
               if (s.length === 0) return;
               const [model, providerName] = getModelProvider(s[0]);
               chatStore.updateTargetSession(session, (session) => {
-                session.mask.modelConfig.model = model as ModelType;
-                session.mask.modelConfig.providerName =
+                session.bot.modelConfig.model = model as ModelType;
+                session.bot.modelConfig.providerName =
                   providerName as ServiceProvider;
-                session.mask.syncGlobalConfig = false;
+                session.bot.syncGlobalConfig = false;
               });
               if (providerName == "ByteDance") {
                 const selectedModel = models.find(
@@ -734,7 +739,7 @@ export function ChatActions(props: {
               if (s.length === 0) return;
               const size = s[0];
               chatStore.updateTargetSession(session, (session) => {
-                session.mask.modelConfig.size = size;
+                session.bot.modelConfig.size = size;
               });
               showToast(size);
             }}
@@ -761,7 +766,7 @@ export function ChatActions(props: {
               if (q.length === 0) return;
               const quality = q[0];
               chatStore.updateTargetSession(session, (session) => {
-                session.mask.modelConfig.quality = quality;
+                session.bot.modelConfig.quality = quality;
               });
               showToast(quality);
             }}
@@ -788,7 +793,7 @@ export function ChatActions(props: {
               if (s.length === 0) return;
               const style = s[0];
               chatStore.updateTargetSession(session, (session) => {
-                session.mask.modelConfig.style = style;
+                session.bot.modelConfig.style = style;
               });
               showToast(style);
             }}
@@ -819,7 +824,7 @@ export function ChatActions(props: {
             onClose={() => setShowPluginSelector(false)}
             onSelection={(s) => {
               chatStore.updateTargetSession(session, (session) => {
-                session.mask.plugin = s as string[];
+                session.bot.plugin = s as string[];
               });
             }}
           />
@@ -1166,9 +1171,9 @@ function _Chat() {
       });
 
       // auto sync mask config from global config
-      if (session.mask.syncGlobalConfig) {
-        console.log("[Mask] syncing from global, name = ", session.mask.name);
-        session.mask.modelConfig = { ...config.modelConfig };
+      if (session.bot.syncGlobalConfig) {
+        console.log("[Mask] syncing from global, name = ", session.bot.name);
+        session.bot.modelConfig = { ...config.modelConfig };
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1272,7 +1277,7 @@ function _Chat() {
 
   const onPinMessage = (message: ChatMessage) => {
     chatStore.updateTargetSession(session, (session) =>
-      session.mask.context.push(message),
+      session.bot.context.push(message),
     );
 
     showToast(Locale.Chat.Actions.PinToastContent, {
@@ -1331,8 +1336,8 @@ function _Chat() {
   }
 
   const context: RenderMessage[] = useMemo(() => {
-    return session.mask.hideContext ? [] : session.mask.context.slice();
-  }, [session.mask.context, session.mask.hideContext]);
+    return session.bot.hideContext ? [] : session.bot.context.slice();
+  }, [session.bot.context, session.bot.hideContext]);
 
   if (
     context.length === 0 &&
@@ -1511,7 +1516,7 @@ function _Chat() {
 
   const handlePaste = useCallback(
     async (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
-      const currentModel = chatStore.currentSession().mask.modelConfig.model;
+      const currentModel = chatStore.currentSession().bot.modelConfig.model;
       if (!isVisionModel(currentModel)) {
         return;
       }
@@ -1664,7 +1669,7 @@ function _Chat() {
             session.clearContextIndex = undefined;
           } else {
             session.clearContextIndex = session.messages.length;
-            session.memoryPrompt = ""; // will clear memory
+            session.bot.memoryPrompt = ""; // will clear memory
           }
         });
       }
@@ -1837,7 +1842,7 @@ function _Chat() {
                                     chatStore.updateTargetSession(
                                       session,
                                       (session) => {
-                                        const m = session.mask.context
+                                        const m = session.bot.context
                                           .concat(session.messages)
                                           .find((m) => m.id === message.id);
                                         if (m) {
@@ -1856,10 +1861,10 @@ function _Chat() {
                                     <Avatar avatar="2699-fe0f" />
                                   ) : (
                                     <MaskAvatar
-                                      avatar={session.mask.avatar}
+                                      avatar={session.bot.avatar}
                                       model={
                                         message.model ||
-                                        session.mask.modelConfig.model
+                                        session.bot.modelConfig.model
                                       }
                                     />
                                   )}

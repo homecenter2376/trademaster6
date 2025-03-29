@@ -1,5 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { ModelType } from "./config";
+import { ServiceProvider, DEFAULT_INPUT_TEMPLATE } from "../constant";
+import { DalleQuality, DalleStyle, ModelSize } from "../typing";
 
 export interface ChatContext {
   id: string;
@@ -19,23 +22,29 @@ export interface Bot {
   enableCodeFold?: boolean;
   syncGlobalConfig?: boolean;
   modelConfig: {
-    model: string;
-    temperature?: number;
-    top_p?: number;
-    max_tokens?: number;
-    presence_penalty?: number;
-    frequency_penalty?: number;
-    sendMemory?: boolean;
-    historyMessageCount?: number;
-    compressMessageLengthThreshold?: number;
-    enableInjectSystemPrompts?: boolean;
-    template?: string;
-    providerName?: string;
-    compressModel?: string;
-    compressProviderName?: string;
+    model: ModelType;
+    providerName: ServiceProvider;
+    temperature: number;
+    top_p: number;
+    max_tokens: number;
+    presence_penalty: number;
+    frequency_penalty: number;
+    sendMemory: boolean;
+    historyMessageCount: number;
+    compressMessageLengthThreshold: number;
+    compressModel: string;
+    compressProviderName: string;
+    enableInjectSystemPrompts: boolean;
+    template: string;
+    size: ModelSize;
+    quality: DalleQuality;
+    style: DalleStyle;
   };
   lang?: string;
   builtin?: boolean;
+  memoryPrompt?: string;
+  lastSummarizeIndex?: number;
+  clearContextIndex?: number;
 }
 
 // Alias for backward compatibility
@@ -51,6 +60,7 @@ export const createEmptyBot = (): Bot => ({
   context: [],
   modelConfig: {
     model: "gpt-3.5-turbo",
+    providerName: ServiceProvider.OpenAI,
     temperature: 0.7,
     top_p: 1,
     max_tokens: 2000,
@@ -59,7 +69,13 @@ export const createEmptyBot = (): Bot => ({
     sendMemory: true,
     historyMessageCount: 4,
     compressMessageLengthThreshold: 1000,
+    compressModel: "",
+    compressProviderName: "",
     enableInjectSystemPrompts: true,
+    template: DEFAULT_INPUT_TEMPLATE,
+    size: "1024x1024",
+    quality: "standard",
+    style: "vivid",
   },
 });
 
