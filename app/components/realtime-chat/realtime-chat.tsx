@@ -62,33 +62,36 @@ export function RealtimeChat({
     }
   };
 
-  const handleInputAudio = async (item: RTInputAudioItem) => {
-    await item.waitForCompletion();
-    if (item.transcription) {
-      const userMessage = createMessage({
-        role: "user",
-        content: item.transcription,
-      });
-      chatStore.updateTargetSession(session, (session) => {
-        session.messages = session.messages.concat([userMessage]);
-      });
-      // save input audio_url, and update session
-      const { audioStartMillis, audioEndMillis } = item;
-      // upload audio get audio_url
-      const blob = audioHandlerRef.current?.saveRecordFile(
-        audioStartMillis,
-        audioEndMillis,
-      );
-      uploadImage(blob!).then((audio_url) => {
-        userMessage.audio_url = audio_url;
-        chatStore.updateTargetSession(session, (session) => {
-          session.messages = session.messages.concat();
+  const handleInputAudio = useCallback(
+    async (item: RTInputAudioItem) => {
+      await item.waitForCompletion();
+      if (item.transcription) {
+        const userMessage = createMessage({
+          role: "user",
+          content: item.transcription,
         });
-      });
-    }
-    // stop streaming play after get input audio.
-    audioHandlerRef.current?.stopStreamingPlayback();
-  };
+        chatStore.updateTargetSession(session, (session) => {
+          session.messages = session.messages.concat([userMessage]);
+        });
+        // save input audio_url, and update session
+        const { audioStartMillis, audioEndMillis } = item;
+        // upload audio get audio_url
+        const blob = audioHandlerRef.current?.saveRecordFile(
+          audioStartMillis,
+          audioEndMillis,
+        );
+        uploadImage(blob!).then((audio_url) => {
+          userMessage.audio_url = audio_url;
+          chatStore.updateTargetSession(session, (session) => {
+            session.messages = session.messages.concat();
+          });
+        });
+      }
+      // stop streaming play after get input audio.
+      audioHandlerRef.current?.stopStreamingPlayback();
+    },
+    [chatStore, session, uploadImage],
+  );
 
   const toggleRecording = useCallback(async () => {
     if (!isRecording && clientRef.current) {

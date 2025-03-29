@@ -182,6 +182,7 @@ export function MessageExporter() {
       session.messages,
       session.mask?.context,
       selection,
+      getSelectedMessages,
     ],
   );
   function preview() {
