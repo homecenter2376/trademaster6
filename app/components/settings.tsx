@@ -504,9 +504,9 @@ function SyncItems() {
       chat: sessions.length,
       message: messageCount,
       prompt: Object.keys(promptStore.prompts).length,
-      mask: Object.keys(maskStore.masks).length,
+      mask: Object.keys(maskStore.bots).length,
     };
-  }, [chatStore.sessions, maskStore.masks, promptStore.prompts]);
+  }, [chatStore.sessions, maskStore.bots, promptStore.prompts]);
 
   return (
     <>
