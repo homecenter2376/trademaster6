@@ -1,0 +1,140 @@
+// Midnight Professional Theme
+:root {
+  // Base colors
+  --primary: #1a1b26;
+  --secondary: #24283b;
+  --tertiary: #414868;
+  --hover: rgba(92, 95, 150, 0.1);
+  
+  // Text colors
+  --text-primary: #c0caf5;
+  --text-secondary: #a9b1d6;
+  --text-tertiary: #565f89;
+  
+  // Accent colors
+  --accent-primary: #7aa2f7;
+  --accent-secondary: #bb9af7;
+  --accent-tertiary: #7dcfff;
+  
+  // UI element colors
+  --border-color: #292e42;
+  --card-background: #1a1b26;
+  --popup-background: #24283b;
+  --mask-background: rgba(26, 27, 38, 0.8);
+  
+  // Chat colors
+  --chat-bubble-bg: #24283b;
+  --chat-bubble-hover: #292e42;
+  --chat-bubble-text: #c0caf5;
+  
+  // Shadows
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+  
+  // Status colors
+  --success: #9ece6a;
+  --warning: #e0af68;
+  --error: #f7768e;
+  --info: #7aa2f7;
+  
+  // Scrollbar
+  --scrollbar-thumb: var(--tertiary);
+  --scrollbar-track: var(--secondary);
+  
+  // Code block colors
+  --code-bg: #1a1b26;
+  --code-text: #c0caf5;
+  --code-border: #292e42;
+  
+  // Input colors
+  --input-bg: #1a1b26;
+  --input-border: #292e42;
+  --input-text: #c0caf5;
+  --input-placeholder: #565f89;
+  
+  // Button colors
+  --button-bg: #414868;
+  --button-text: #c0caf5;
+  --button-hover: #565f89;
+  
+  // Theme color for system UI
+  --theme-color: #1a1b26;
+}
+
+body.midnight-pro {
+  background-color: var(--primary);
+  color: var(--text-primary);
+  
+  // Apply theme colors to specific elements
+  .chat-message {
+    background-color: var(--chat-bubble-bg);
+    color: var(--chat-bubble-text);
+    
+    &:hover {
+      background-color: var(--chat-bubble-hover);
+    }
+  }
+  
+  .input-area {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    
+    input {
+      color: var(--input-text);
+      &::placeholder {
+        color: var(--input-placeholder);
+      }
+    }
+  }
+  
+  .sidebar {
+    background-color: var(--secondary);
+    border-color: var(--border-color);
+  }
+  
+  .card {
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+  
+  .popup {
+    background-color: var(--popup-background);
+  }
+  
+  .mask {
+    background-color: var(--mask-background);
+  }
+  
+  // Scrollbar styling
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+  }
+  
+  // Code block styling
+  pre, code {
+    background-color: var(--code-bg);
+    color: var(--code-text);
+    border-color: var(--code-border);
+  }
+  
+  // Button styling
+  button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    
+    &:hover {
+      background-color: var(--button-hover);
+    }
+  }
+} 
