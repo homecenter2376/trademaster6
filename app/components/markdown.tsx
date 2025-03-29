@@ -71,7 +71,10 @@ export function Mermaid(props: { code: string }) {
   );
 }
 
-export function PreCode(props: { children: any }) {
+export function PreCode(props: {
+  children: any;
+  renderArtifacts?: () => void;
+}) {
   const ref = useRef<HTMLPreElement>(null);
   const previewRef = useRef<HTMLPreviewHander>(null);
   const [mermaidCode, setMermaidCode] = useState("");
@@ -129,6 +132,12 @@ export function PreCode(props: { children: any }) {
       setTimeout(renderArtifacts, 1);
     }
   }, []);
+
+  useEffect(() => {
+    if (props.renderArtifacts) {
+      renderArtifacts();
+    }
+  }, [props.renderArtifacts, renderArtifacts]);
 
   return (
     <>

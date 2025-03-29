@@ -14,6 +14,15 @@ export interface ChatContext {
   streaming?: boolean;
   isError?: boolean;
   model?: string;
+  tools?: Array<{
+    id: string;
+    isError?: boolean;
+    errorMsg?: string;
+    function?: {
+      name: string;
+    };
+  }>;
+  audio_url?: string;
 }
 
 export interface Bot {

@@ -100,8 +100,10 @@ export function Sd() {
   const isSd = location.pathname === Path.Sd;
 
   useEffect(() => {
-    setSdImages(sdStore.draw);
-  }, [sdStore.currentId]);
+    if (sdStore.draw) {
+      sdStore.draw();
+    }
+  }, [sdStore.draw]);
 
   return (
     <>

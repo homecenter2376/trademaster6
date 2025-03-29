@@ -316,6 +316,12 @@ export function RealtimeChat({
     clientRef.current?.configure({ temperature });
   }, [temperature]);
 
+  useEffect(() => {
+    if (isRecording) {
+      handleConnect();
+    }
+  }, [isRecording, handleConnect]);
+
   const handleClose = async () => {
     onClose?.();
     if (isRecording) {

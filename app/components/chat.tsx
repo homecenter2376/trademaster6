@@ -109,8 +109,8 @@ import {
   UNFINISHED_INPUT,
 } from "../constant";
 import { Avatar } from "./emoji";
-import { ContextPrompts, MaskAvatar, MaskConfig, ChatContext } from "./mask";
-import { useMaskStore } from "../store/mask";
+import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
+import { ChatContext, useMaskStore, DEFAULT_BOT_AVATAR } from "../store/mask";
 import { ChatCommandPrefix, useChatCommand, useCommand } from "../command";
 import { prettyObject } from "../utils/format";
 import { ExportMessageModal } from "./exporter";
@@ -126,6 +126,7 @@ import { RealtimeChat } from "@/app/components/realtime-chat";
 import clsx from "clsx";
 import { getAvailableClientsCount, isMcpEnabled } from "../mcp/actions";
 import { nanoid } from "nanoid";
+import Image from "next/image";
 
 const localStorage = safeLocalStorage();
 
@@ -1032,7 +1033,7 @@ function _Chat() {
       scrollRef.current.getBoundingClientRect().top;
     // leave some space for user question
     return topDistance < 100;
-  }, [scrollRef?.current?.scrollHeight]);
+  }, [scrollRef.current]);
 
   const isTyping = userInput !== "";
 
@@ -1186,8 +1187,7 @@ function _Chat() {
         session.bot.modelConfig = { ...config.modelConfig };
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
+  }, [session, config.modelConfig, chatStore]);
 
   // check if should send message
   const onInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -1886,7 +1886,9 @@ function _Chat() {
                                     <Avatar avatar="2699-fe0f" />
                                   ) : (
                                     <MaskAvatar
-                                      avatar={session.bot.avatar}
+                                      avatar={
+                                        session.bot.avatar || DEFAULT_BOT_AVATAR
+                                      }
                                       model={
                                         message.model ||
                                         session.bot.modelConfig.model
@@ -2016,10 +2018,13 @@ function _Chat() {
                               defaultShow={i >= messages.length - 6}
                             />
                             {getMessageImages(message).length == 1 && (
-                              <img
+                              <Image
                                 className={styles["chat-message-item-image"]}
                                 src={getMessageImages(message)[0]}
                                 alt=""
+                                width={512}
+                                height={512}
+                                style={{ maxWidth: "100%", height: "auto" }}
                               />
                             )}
                             {getMessageImages(message).length > 1 && (
@@ -2035,7 +2040,7 @@ function _Chat() {
                                 {getMessageImages(message).map(
                                   (image, index) => {
                                     return (
-                                      <img
+                                      <Image
                                         className={
                                           styles[
                                             "chat-message-item-image-multi"
@@ -2044,6 +2049,12 @@ function _Chat() {
                                         key={index}
                                         src={image}
                                         alt=""
+                                        width={256}
+                                        height={256}
+                                        style={{
+                                          maxWidth: "100%",
+                                          height: "auto",
+                                        }}
                                       />
                                     );
                                   },
