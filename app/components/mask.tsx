@@ -133,8 +133,8 @@ export function MaskConfig(props: {
               style={{ cursor: "pointer" }}
             >
               <MaskAvatar
-                avatar={props.mask.avatar}
-                model={props.mask.modelConfig.model}
+                avatar={props.mask?.avatar || ""}
+                model={props.mask?.modelConfig?.model || ""}
               />
             </div>
           </Popover>
