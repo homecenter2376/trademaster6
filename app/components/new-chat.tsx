@@ -9,20 +9,20 @@ import LightningIcon from "../icons/lightning.svg";
 import EyeIcon from "../icons/eye.svg";
 
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mask, useMaskStore } from "../store/mask";
+import { Bot, useBotStore } from "../store/mask";
 import Locale from "../locales";
 import { useAppConfig, useChatStore } from "../store";
 import { MaskAvatar } from "./mask";
 import { useCommand } from "../command";
 import { showConfirm } from "./ui-lib";
-import { BUILTIN_MASK_STORE } from "../masks";
+import { BUILTIN_MASK_STORE } from "../bots";
 import clsx from "clsx";
 
-function MaskItem(props: { mask: Mask; onClick?: () => void }) {
+function MaskItem(props: { mask: Bot; onClick?: () => void }) {
   return (
     <div className={styles["mask"]} onClick={props.onClick}>
       <MaskAvatar
-        avatar={props.mask.avatar}
+        avatar={props.mask.avatar || ""}
         model={props.mask.modelConfig.model}
       />
       <div className={clsx(styles["mask-name"], "one-line")}>
@@ -32,8 +32,8 @@ function MaskItem(props: { mask: Mask; onClick?: () => void }) {
   );
 }
 
-function useMaskGroup(masks: Mask[]) {
-  const [groups, setGroups] = useState<Mask[][]>([]);
+function useMaskGroup(masks: Bot[]) {
+  const [groups, setGroups] = useState<Bot[][]>([]);
 
   useEffect(() => {
     const computeGroup = () => {
@@ -76,7 +76,7 @@ function useMaskGroup(masks: Mask[]) {
 
 export function NewChat() {
   const chatStore = useChatStore();
-  const maskStore = useMaskStore();
+  const maskStore = useBotStore();
 
   const masks = maskStore.getAll();
   const groups = useMaskGroup(masks);
@@ -88,7 +88,7 @@ export function NewChat() {
 
   const { state } = useLocation();
 
-  const startChat = (mask?: Mask) => {
+  const startChat = (mask?: Bot) => {
     setTimeout(() => {
       chatStore.newSession(mask);
       navigate(Path.Chat);
@@ -153,7 +153,7 @@ export function NewChat() {
       <div className={styles["actions"]}>
         <IconButton
           text={Locale.NewChat.More}
-          onClick={() => navigate(Path.Masks)}
+          onClick={() => navigate(Path.Bots)}
           icon={<EyeIcon />}
           bordered
           shadow

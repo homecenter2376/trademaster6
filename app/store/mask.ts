@@ -4,8 +4,13 @@ import { persist } from "zustand/middleware";
 export interface Bot {
   id: string;
   name: string;
+  avatar?: string;
   description: string;
   context: string[];
+  hideContext?: boolean;
+  enableArtifacts?: boolean;
+  enableCodeFold?: boolean;
+  syncGlobalConfig?: boolean;
   modelConfig: {
     model: string;
     temperature?: number;
@@ -25,6 +30,8 @@ export interface Bot {
   lang?: string;
   builtin?: boolean;
 }
+
+export const DEFAULT_BOT_AVATAR = "gpt-bot";
 
 export const createEmptyBot = (): Bot => ({
   id: "",
@@ -52,12 +59,16 @@ interface BotStore {
   deleteBot: (id: string) => void;
   getBot: (id: string) => Bot | undefined;
   getAllBots: () => Bot[];
+  get: (id: string) => Bot | undefined;
+  getAll: () => Bot[];
+  language: string;
 }
 
 export const useBotStore = create<BotStore>()(
   persist(
     (set, get) => ({
       bots: [] as Bot[],
+      language: "en",
       create(bot?: Bot) {
         const newBot = bot || createEmptyBot();
         const bots = get().bots;
@@ -87,6 +98,12 @@ export const useBotStore = create<BotStore>()(
       getAllBots() {
         const bots = get().bots;
         return bots;
+      },
+      get(id: string) {
+        return get().getBot(id);
+      },
+      getAll() {
+        return get().getAllBots();
       },
     }),
     {

@@ -269,7 +269,7 @@ export function SideBar(props: { className?: string }) {
               if (config.dontShowMaskSplashScreen !== true) {
                 navigate(Path.NewChat, { state: { fromHome: true } });
               } else {
-                navigate(Path.Masks, { state: { fromHome: true } });
+                navigate(Path.Bots, { state: { fromHome: true } });
               }
             }}
             shadow

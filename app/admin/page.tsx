@@ -1,3 +1,5 @@
+"use client";
+
 import { AdminDashboard } from "../components/admin-dashboard";
 import { useAccessControl } from "../hooks/use-access-control";
 import { useEffect } from "react";

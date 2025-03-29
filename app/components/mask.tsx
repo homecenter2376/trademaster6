@@ -13,7 +13,7 @@ import EyeIcon from "../icons/eye.svg";
 import CopyIcon from "../icons/copy.svg";
 import DragIcon from "../icons/drag.svg";
 
-import { DEFAULT_MASK_AVATAR, Mask, useMaskStore } from "../store/mask";
+import { Bot, DEFAULT_BOT_AVATAR, useBotStore } from "../store/mask";
 import {
   ChatMessage,
   createMessage,
@@ -47,7 +47,7 @@ import {
 import { Updater } from "../typing";
 import { ModelConfigList } from "./model-config";
 import { FileName, Path } from "../constant";
-import { BUILTIN_MASK_STORE } from "../masks";
+import { BUILTIN_MASK_STORE } from "../bots";
 import {
   DragDropContext,
   Droppable,
@@ -66,7 +66,7 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
 }
 
 export function MaskAvatar(props: { avatar: string; model?: ModelType }) {
-  return props.avatar !== DEFAULT_MASK_AVATAR ? (
+  return props.avatar !== DEFAULT_BOT_AVATAR ? (
     <Avatar avatar={props.avatar} />
   ) : (
     <Avatar model={props.model} />
@@ -74,8 +74,8 @@ export function MaskAvatar(props: { avatar: string; model?: ModelType }) {
 }
 
 export function MaskConfig(props: {
-  mask: Mask;
-  updateMask: Updater<Mask>;
+  mask: Bot;
+  updateMask: Updater<Bot>;
   extraListItems?: JSX.Element;
   readonly?: boolean;
   shouldSyncFromGlobal?: boolean;
@@ -442,7 +442,7 @@ export function ContextPrompts(props: {
 export function MaskPage() {
   const navigate = useNavigate();
 
-  const maskStore = useMaskStore();
+  const maskStore = useBotStore();
   const chatStore = useChatStore();
   const appConfig = useAppConfig();
 
@@ -452,7 +452,7 @@ export function MaskPage() {
     .getAll()
     .filter((m) => !filterLang || m.lang === filterLang);
 
-  const [searchMasks, setSearchMasks] = useState<Mask[]>([]);
+  const [searchMasks, setSearchMasks] = useState<Bot[]>([]);
   const [searchText, setSearchText] = useState("");
   const masks = searchText.length > 0 ? searchMasks : allMasks;
 
