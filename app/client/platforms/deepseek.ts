@@ -96,7 +96,7 @@ export class DeepSeekApi implements LLMApi {
 
     const modelConfig = {
       ...useAppConfig.getState().modelConfig,
-      ...useChatStore.getState().currentSession().mask.modelConfig,
+      ...useChatStore.getState().currentSession().bot.modelConfig,
       ...{
         model: options.config.model,
         providerName: options.config.providerName,
@@ -140,7 +140,7 @@ export class DeepSeekApi implements LLMApi {
         const [tools, funcs] = usePluginStore
           .getState()
           .getAsTools(
-            useChatStore.getState().currentSession().mask?.plugin || [],
+            useChatStore.getState().currentSession().bot?.plugin || [],
           );
         return streamWithThink(
           chatPath,
